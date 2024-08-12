@@ -4,6 +4,12 @@
 	align-items: center;
 }
 
+.game-div {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0;
+}
+
 .rect {
 	display: flex;
 	justify-content: center;
@@ -11,7 +17,6 @@
 	width: 125px;
 	height: 125px;
 	font-size: xx-large;
-	border: 1px solid black;
 	color: white;
 }
 

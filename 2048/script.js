@@ -13,29 +13,145 @@ gameDiv.style.border = "1px solid black";
 
 const gameState = [0, 0];
 let startPosition = { x: 0, y: 0 };
+const rectArr = [
+	[undefined, undefined, undefined, undefined],
+	[undefined, undefined, undefined, undefined],
+	[undefined, undefined, undefined, undefined],
+	[undefined, undefined, undefined, undefined]
+];
+let fillCount = 0;
+
 
 gameDiv.addEventListener("pointerdown", pointerdown);
 
-function makeRect(num) {
+function makeRect() {
+	if (fillCount >= (rectArr.length * rectArr[0].length)) {
+		return
+	}
+
+	const num = "2";
 	const rect = document.createElement("div");
 	rect.classList.add("rect");
 	rect.setAttribute("data-num", num);
 	rect.innerHTML = num;
 
-	return rect;
+	const index = [-1, -1];
+	do {
+		index[0] = Math.floor(Math.random() * rectArr.length - 1);
+		index[1] = Math.floor(Math.random() * rectArr[0].length - 1);
+	} while (rectArr[index[0]][index[1]] !== undefined);
+
+	gameDiv.appendChild(rect);
+	rectArr[index[0]][index[1]] = rect;
+
+	fillCount++;
 }
-const rect = makeRect("2");
-const rect1 = makeRect("4");
-const rect2 = makeRect("8");
-const rect3 = makeRect("16");
-const rect4 = makeRect("32");
-const rect5 = makeRect("64");
-gameDiv.appendChild(rect);
-gameDiv.appendChild(rect1);
-gameDiv.appendChild(rect2);
-gameDiv.appendChild(rect3);
-gameDiv.appendChild(rect4);
-gameDiv.appendChild(rect5);
+
+function moveRects(coord, dir) {
+	console.log(rectArr)
+	if (coord === "x") {
+		if (dir > 0) {
+			for (let i = 0; i < rectArr.length; i++) {
+				for (let j = rectArr[i].length - 2; j > -1; j--) {
+					if (rectArr[i][j] === undefined) {
+						continue
+					}
+					console.log(i, j)
+					console.log(rectArr[i][j]);
+					let count = 1;
+					while (j + count < rectArr[i].length) {
+						if (rectArr[i][j + count] !== undefined) {
+							if (rectArr[i][j].innerHTML !== rectArr[i][j + count].innerHTML) {
+								break
+							}
+							//merge
+						} else {
+							rectArr[i][j].style.transform = "translateX(125px)";
+							rectArr[i][j + count] = rectArr[i][j];
+							rectArr[i][j] = undefined;
+						}
+						count++;
+					}
+				}
+			}
+		} else {
+			for (let i = 0; i < rectArr.length; i++) {
+				for (let j = 1; j < rectArr[i].length; j++) {
+					if (rectArr[i][j] === undefined) {
+						continue
+					}
+					console.log(i, j)
+					console.log(rectArr[i][j]);
+					let count = 1;
+					while (j - count > -1) {
+						if (rectArr[i][j - count] !== undefined) {
+							if (rectArr[i][j].innerHTML !== rectArr[i][j - count].innerHTML) {
+								break
+							}
+							//merge
+						} else {
+							rectArr[i][j].style.transform = "translateX(-125px)";
+							rectArr[i][j - count] = rectArr[i][j];
+							rectArr[i][j] = undefined;
+						}
+						count++;
+					}
+				}
+			}
+		}
+	} else {
+		if (dir > 0) {
+			for (let i = 0; i < rectArr[0].length; i++) {
+				for (let j = rectArr.length - 2; j > -1; j--) {
+					if (rectArr[j][i] === undefined) {
+						continue
+					}
+					console.log(j, i)
+					console.log(rectArr[j][i]);
+					let count = 1;
+					while (j + count < rectArr.length) {
+						if (rectArr[j + count][i] !== undefined) {
+							if (rectArr[j][i].innerHTML !== rectArr[j + count][i].innerHTML) {
+								break
+							}
+							//merge
+						} else {
+							rectArr[j][i].style.transform = "translateX(125px)";
+							rectArr[j + count][i] = rectArr[j][i];
+							rectArr[j][i] = undefined;
+						}
+						count++;
+					}
+				}
+			}
+		} else {
+			for (let i = 0; i < rectArr[0].length; i++) {
+				for (let j = 1; j < rectArr.length; j++) {
+					if (rectArr[j][i] === undefined) {
+						continue
+					}
+					console.log(j, i)
+					console.log(rectArr[j][i]);
+					let count = 1;
+					while (j - count > -1) {
+						if (rectArr[j - count][i] !== undefined) {
+							if (rectArr[j][i].innerHTML !== rectArr[j - count][i].innerHTML) {
+								break
+							}
+							//merge
+						} else {
+							rectArr[j][i].style.transform = "translateX(-125px)";
+							rectArr[j - count][i] = rectArr[j][i];
+							rectArr[j][i] = undefined;
+						}
+						count++;
+					}
+				}
+			}
+		}
+	}
+}
+
 /**
  *@param {PointerEvent} e
  * */
@@ -52,21 +168,14 @@ function pointermove(e) {
 	gameDiv.removeEventListener("pointermove", pointermove);
 	gameDiv.addEventListener("pointerdown", pointerdown);
 	const diff = { x: e.clientX - startPosition.x, y: e.clientY - startPosition.y };
-	if (Math.abs(diif.x) > Math.abs(y)) {
-		if (diff.x > 0) {
-			//rigth
-		} else {
-			//left
-		}
+	if (Math.abs(diff.x) > Math.abs(diff.y)) {
+		moveRects("x", diff);
 	} else if (Math.abs(diff.y) > Math.abs(diff.x)) {
-		if (diff.y > 0) {
-			//down
-		} else {
-			//up
-		}
+		moveRects("y", diff);
 	} else {
 		//45 deg 
 	}
+	makeRect();
 }
 
 
