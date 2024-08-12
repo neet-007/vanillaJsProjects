@@ -1,0 +1,40 @@
+.main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.rect {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 125px;
+	height: 125px;
+	font-size: xx-large;
+	border: 1px solid black;
+	color: white;
+}
+
+.rect[data-num="2"] {
+	background-color: grey;
+}
+
+.rect[data-num="4"] {
+	background-color: navy;
+}
+
+.rect[data-num="8"] {
+	background-color: crimson;
+}
+
+.rect[data-num="16"] {
+	background-color: darkcyan;
+}
+
+.rect[data-num="32"] {
+	background-color: black;
+}
+
+.rect[data-num="64"] {
+	background-color: orange;
+}
